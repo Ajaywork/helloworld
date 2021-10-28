@@ -9,15 +9,9 @@ name: Java CI with Maven
 on:
   push:
     branches:
-      - main
+      - disable-merge
       
-env:
-   TEAM_ROLE1: Devops
-   TEAM_ROLE2: Development
-   TEAM_ROLE3: test
     
-      
-
 jobs:
   build:
 
@@ -29,34 +23,15 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
-    - name: Creating a Team
-      run: | 
-        echo "Login to git api "
-        curl -i -u ${{ secrets.GITHUBUSER }}:${{ secrets.GITHUBPASS }} https://api.github.com/user
-        echo "create a new team"
-        curl \-X POST \-H "Accept: application/vnd.github.v3+json" \-H "Authorization: ${{ secrets.TOKEN }}" \https://api.github.com/orgs/Ajaywork/teams \-d '{"name":"Development"}' 
-        echo "completed"
-    - name: Updating Permissions for Devops 
-      run: curl -X PATCH -H "Accept:application/vnd.github.v3+json" -H "Authorization:${{ secrets.TOKEN }}" https://api.github.com/orgs/Ajaywork/teams/$TEAM_ROLE1 -d '{"permission":"admin"}'
-   
-    - name: Updating Permissions for Devlopment 
-      run: curl -X PATCH -H "Accept:application/vnd.github.v3+json" -H "Authorization:${{ secrets.TOKEN }}" https://api.github.com/orgs/Ajaywork/teams/$TEAM_ROLE2 -d '{"permission":"push"}'
-   
-    - name: Updating Permissions for Test
-      run: curl -X PATCH -H "Accept:application/vnd.github.v3+json" -H "Authorization:${{ secrets.TOKEN }}" https://api.github.com/orgs/Ajaywork/teams/$TEAM_ROLE3 -d '{"permission":"pull"}'
     
     - name: Creating a Repo
       run: | 
         echo "Login to git api "
         curl -i -u ${{ secrets.GITHUBUSER }}:${{ secrets.GITHUBPASS }} https://api.github.com/user
         echo "create a new repo"
-        curl \-X POST \-H "Accept: application/vnd.github.v3+json" \-H "Authorization: ${{ secrets.TOKEN }}" \https://api.github.com/orgs/Ajaywork/repositories \-d '{"name":"Development"}' 
+        curl \-X POST \-H "Accept: application/vnd.github.v3+json" \-H "Authorization: ${{ secrets.TOKEN }}" \https://api.github.com/user/repos\-d '{"name":"disable merge","allow_merge_commit":false,"allow_squash_merge":true,"allow_rebase_merge":false}' 
         echo "completed"
-    - name: Updating Permissions for Devops 
-      run: curl -X PATCH -H "Accept:application/vnd.github.v3+json" -H "Authorization:${{ secrets.TOKEN }}" https://api.github.com/orgs/Ajaywork/repositories/$TEAM_ROLE1 -d '{"permission":"admin"}'
+    
+  
    
-    - name: Updating Permissions for Devlopment 
-      run: curl -X PATCH -H "Accept:application/vnd.github.v3+json" -H "Authorization:${{ secrets.TOKEN }}" https://api.github.com/orgs/Ajaywork/repositories/$TEAM_ROLE2 -d '{"permission":"push"}'
-   
-    - name: Updating Permissions for Test
-      run: curl -X PATCH -H "Accept:application/vnd.github.v3+json" -H "Authorization:${{ secrets.TOKEN }}" https://api.github.com/orgs/Ajaywork/repositories/$TEAM_ROLE3 -d '{"permission":"pull"}'
+    
